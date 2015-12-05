@@ -1,0 +1,17 @@
+Package: tourbrush
+Title: Reusable shiny app for touring with a linked brush
+Version: 0.0.1
+Authors@R: "Carson Sievert <cpsievert1@gmail.com> [aut, cre]"
+Description: Reusable shiny app for touring with a linked brush
+Depends:
+    R (>= 3.2.2)
+Import:
+    shiny,
+    ggvis,
+    ggplot2,
+    tourr,
+    scales,
+    RColorBrewer
+License: MIT + file LICENSE
+LazyData: true
+RoxygenNote: 5.0.1
