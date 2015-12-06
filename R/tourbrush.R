@@ -6,7 +6,7 @@
 #' @export
 #' @examples \dontrun{
 #' library(mvtnorm)
-#' s <- matrix(c(1, .5, .5, .5, 1, .5, .5, .5, 1), ncol = 3)
+#' s <- matrix(c(1, .5, .9, .5, 1, .5, .9, .5, 1), ncol = 3)
 #' m <- rmvnorm(500, sigma = s)
 #' # take 1D slice of the 3D density
 #' d <- setNames(data.frame(m), c("x", "y", "z"))
@@ -104,18 +104,25 @@ tourbrush <- function(df, aps = 2, palette = "Dark2") {
       list(
         mat = mat,
         tour = tour,
-        step = tour(aps / 30) # you always want 30 frames per second, right?
+        step = tour(0)
       )
     })
 
     # standing on the shoulders of giants, as they say
     # https://github.com/rstudio/ggvis/blob/master/demo/tourr.r
-    tourDat <- reactive({
+    iterTour <- reactive({
       tr <- initTour()
-      if (input$play) {
-        invalidateLater(1000 / 30, NULL)
-      }
-      tr$step <- tr$tour(aps / 30)
+      if (input$play) invalidateLater(500 / 30, NULL)
+      tr$step <- tr$tour(aps / 30) # you always want 30 frames/second, right?
+      list(
+        mat = tr$mat,
+        tour = tr$tour,
+        step = tr$step
+      )
+    })
+
+    tourDat <- reactive({
+      tr <- iterTour()
       tDat <- data.frame(center(tr$mat %*% tr$step$proj))
       tDat$color <- updateSelection()
       setNames(tDat, c("x", "y", "color"))
