@@ -49,7 +49,12 @@ tourbrush <- function(df, aps = 2, palette = "Dark2") {
     }
   }
 
-  selection <- initSelection(scaleDat(d[, 1]))
+  selection <- if (identical("none", names(d))) {
+    initSelection()
+  } else {
+    initSelection(scaleDat(d[, 1]))
+  }
+
 
   ui <- bootstrapPage(
     # controls
@@ -109,8 +114,8 @@ tourbrush <- function(df, aps = 2, palette = "Dark2") {
       tr <- initTour()
       if (input$play) {
         invalidateLater(1000 / 30, NULL)
-        tr$step <- tr$tour(aps / 30)
       }
+      tr$step <- tr$tour(aps / 30)
       tDat <- data.frame(center(tr$mat %*% tr$step$proj))
       tDat$color <- updateSelection()
       setNames(tDat, c("x", "y", "color"))
@@ -118,9 +123,14 @@ tourbrush <- function(df, aps = 2, palette = "Dark2") {
 
     output$scatter1 <- renderPlot({
       s <- m[c(input$x, input$y)]
-      s$color <- updateSelection()
-      ggplot(s, aes_string(input$x, input$y, color = "color")) +
-        geom_point(size = 5) + scale_color_identity() + theme_bw()
+      labs <- d[, input$label]
+      s[input$label] <- labs
+      colorz <- updateSelection()
+      s[colorz %in% cols, input$label] <- "selection"
+      v <- setNames(unique(colorz), unique(s[, input$label]))
+      ggplot(s, aes_string(input$x, input$y, color = input$label)) +
+        geom_point(size = 5) + scale_color_manual(values = v) + theme_bw() +
+        theme(legend.position = if (input$label == "none") "none" else "bottom")
     }, width = 400)
 
     tourDat %>%
