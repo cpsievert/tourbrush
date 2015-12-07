@@ -112,7 +112,7 @@ tourbrush <- function(df, aps = 2, palette = "Dark2") {
     # https://github.com/rstudio/ggvis/blob/master/demo/tourr.r
     iterTour <- reactive({
       tr <- initTour()
-      if (input$play) invalidateLater(500 / 30, NULL)
+      if (input$play) invalidateLater(1000 / 30, NULL)
       tr$step <- tr$tour(aps / 30) # you always want 30 frames/second, right?
       list(
         mat = tr$mat,

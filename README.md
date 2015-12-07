@@ -11,7 +11,7 @@ devtools::install_github("cpsievert/tourbrush")
 
 ## Getting Started
 
-See the examples on the help page:
+See the [video](https://vimeo.com/148050343) which demos examples found on the help page:
 
 ```r
 library(tourbrush)
